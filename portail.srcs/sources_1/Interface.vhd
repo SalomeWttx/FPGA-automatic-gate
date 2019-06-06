@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, Salomé Wattiaux, Marco Guzzon
+-- Engineer: Alban Benmouffek, SalomÃ© Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 26.02.2019 14:49:50
 -- Design Name: 
@@ -8,12 +8,12 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: ce module gère les interactions avec l'utilisateur : saisie du code, télécommandes...
+-- Description: ce module gÃ¨re les interactions avec l'utilisateur : saisie du code, tÃ©lÃ©commandes...
 -- 
 -- Dependencies: 
 --  Digicode (Digicode.vhd)
 --  Auth (Auth.vhd)
---  hautparleur (hautparleur.vhd)
+--  HautParleur (HautParleur.vhd)
 --  Boutons (Boutons.vhd)
 ----------------------------------------------------------------------------------
 
@@ -23,12 +23,12 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity Interface is
     generic (
-        DigicodeOvertime : integer := 10 --Temps d'inactivité max du digicode (en secondes)
+        DigicodeOvertime : integer := 10 --Temps d'inactivitÃ© max du digicode (en secondes)
     );
     Port ( 
         --Clavier matriciel: (plus d'infos dans Digicode.vhd)
-        lignes : out STD_LOGIC_VECTOR (3 downto 0);
-        colonnes : in STD_LOGIC_VECTOR (3 downto 0);        
+        lignes : out STD_LOGIC_VECTOR (3 downto 0); --lignes du clavier (mises une Ã  une Ã  l'Ã©tat logique '1')
+        colonnes : in STD_LOGIC_VECTOR (3 downto 0); --colonnes du clavier (lues pour en dÃ©duire les touches pressÃ©es)      
         
         --EENTREES DIVERSES:
         CLK : in STD_LOGIC; -- Horloge
@@ -37,13 +37,13 @@ entity Interface is
         boutonOuvrir : in STD_LOGIC; -- vaut '1' si on veut ouvrir le portail
         boutonStop : in STD_LOGIC; -- vaut '1' si on veut fermer le portail
         boutonFermer : in STD_LOGIC; -- vaut '1' si on veut fermer le portail
-        boutonChange : in STD_LOGIC; -- vaut '1' si on veut changer l'état du portail
+        boutonChange : in STD_LOGIC; -- vaut '1' si on veut changer l'Ã©tat du portail
         
         --SORTIES DIVERSES:
-        ForceOuverture : out STD_LOGIC; --Demande d'ouverture du portail (activé que pendant une période d'horloge)
-        ForceFermeture : out STD_LOGIC; --Demande de fermeture du portail (activé que pendant une période d'horloge)
-        ControlSignal : out STD_LOGIC; --Demande de changement d'état du portail (comme si on avait une télécommande à 1 bouton) (activé que pendant une période d'horloge)
-        Stop : out STD_LOGIC; --Demande d'arrêt du portail
+        ForceOuverture : out STD_LOGIC; --Demande d'ouverture du portail (activÃ© que pendant une pÃ©riode d'horloge)
+        ForceFermeture : out STD_LOGIC; --Demande de fermeture du portail (activÃ© que pendant une pÃ©riode d'horloge)
+        ControlSignal : out STD_LOGIC; --Demande de changement d'Ã©tat du portail (comme si on avait une tÃ©lÃ©commande Ã  1 bouton) (activÃ© que pendant une pÃ©riode d'horloge)
+        Stop : out STD_LOGIC; --Demande d'arrÃªt du portail
         
         retroEclairageDigicode : out STD_LOGIC;
         LED_digicode : out STD_LOGIC_VECTOR(4 downto 0); --5 LED pour le digicode
@@ -74,7 +74,7 @@ begin
     digicode:       
         entity work.Digicode 
         port map(
-            --Entrées:
+            --EntrÃ©es:
             CLK=>CLK,  
             colonnes=>colonnes,
             --Sorties:
@@ -86,7 +86,7 @@ begin
     boutons:
         entity work.Boutons
         port map(
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK,
             boutonOuvrir_IN => boutonOuvrir,
             boutonStop_IN => boutonStop,
@@ -107,7 +107,7 @@ begin
             DigicodeOvertime => DigicodeOvertime
         )
         port map(
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK, 
             numeroTouche => digicode_auth_numeroTouche,
             toucheDetectee => digicode_auth_toucheDetectee,
@@ -131,7 +131,7 @@ begin
     hautparleur:
         entity work.HautParleur
         port map(
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK,
             duree => auth_hautparleur_DureeBip,
             repetition => auth_hautparleur_repetitionBip,
