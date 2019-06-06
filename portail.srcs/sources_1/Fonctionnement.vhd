@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, Salomé Wattiaux, Marco Guzzon
+-- Engineer: Alban Benmouffek, SalomÃ© Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 26.02.2019 14:49:28
 -- Design Name: 
@@ -8,13 +8,14 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: ce module gère le fonctionnement du portail : détection d'obstacle, contrôle du moteur, éclairage...
+-- Description: ce module gÃ¨re le fonctionnement du portail : dÃ©tection d'obstacle, contrÃ´le du moteur, Ã©clairage...
 -- 
 -- Dependencies: 
 --  detecteurObstacle (detecteurObstacle.vhd)
 --  ctrlPortail (ctrlPortail.vhd)
 --  Attendre (Attendre.vhd)
 --  Cligno (Cligno.vhd)
+--  PWM (PWM.vhd)
 ----------------------------------------------------------------------------------
 
 library IEEE;
@@ -23,7 +24,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity Fonctionnement is
     Generic (
-        TempsMaxPortailNonFerme : integer := 60; --temps maximal ou le portail reste non fermé (en secondes)
+        TempsMaxPortailNonFerme : integer := 60; --temps maximal ou le portail reste non fermÃ© (en secondes)
         
         duty : integer := 80  --duty cycle du PWM, en %
         );
@@ -34,20 +35,20 @@ entity Fonctionnement is
         FinDeCourse : in STD_LOGIC_VECTOR (1 downto 0); --Capteur de fin de course
         -- FinDeCourse(1) = '1' <=> Portail Ferme ; FinDeCourse(0) = '1' <=> Portail Ouvert
         
-        ControlSignal : in STD_LOGIC; --Demande de changement d'état du portail (comme si on avait une télécommande à 1 bouton) (activé que pendant une période d'horloge)
-        ForceOuverture : in STD_LOGIC; --Demande d'ouverture du portail (activé que pendant une période d'horloge)
-        ForceFermeture : in STD_LOGIC; --Demande de fermeture du portail (activé que pendant une période d'horloge)
-        Stop : in STD_LOGIC; --Demande d'arrêt du portail
+        ControlSignal : in STD_LOGIC; --Demande de changement d'Ã©tat du portail (comme si on avait une tÃ©lÃ©commande Ã  1 bouton) (activÃ© que pendant une pÃ©riode d'horloge)
+        ForceOuverture : in STD_LOGIC; --Demande d'ouverture du portail (activÃ© que pendant une pÃ©riode d'horloge)
+        ForceFermeture : in STD_LOGIC; --Demande de fermeture du portail (activÃ© que pendant une pÃ©riode d'horloge)
+        Stop : in STD_LOGIC; --Demande d'arrÃªt du portail
 
-        InfoCourant : in STD_LOGIC; --Signal indiquant si le moteur est bloqué ou non
+        InfoCourant : in STD_LOGIC; --Signal indiquant si le moteur est bloquÃ© ou non
                 
         --SORTIES DIVERSES:
         LED_Clignottant : out STD_LOGIC; --Clignottant orange
         LED_Eclairage : out STD_LOGIC; --Eclairage puissant autour du portail
         
-        --Contrôle du moteur:
+        --ContrÃ´le du moteur:
         SensMoteur : out STD_LOGIC; -- SensMoteur = '1' <=> Ouverture
-        NonSensMoteur : out STD_LOGIC; 
+        NonSensMoteur : out STD_LOGIC; -- NonSensMoteur = '0' <=> Ouverture
         SignalMoteur : out STD_LOGIC -- SignalMoteur = '1' <=> Moteur en marche
         );
 end Fonctionnement;
@@ -70,7 +71,7 @@ architecture Behavioral of Fonctionnement is
     --Liaison ctrlPortail <-> PWM
     signal ctrlPortail_PWM_SignalMoteur : STD_LOGIC;
     
-    --Infos Moteur:
+    --Infos Moteur (permet de lier detecteur, PWM, et CtrlPortail) :
     signal sig_SensMoteur : STD_LOGIC;
     signal sig_SignalMoteur : STD_LOGIC;
     signal SignalMoteur_PWM : STD_LOGIC;
@@ -79,7 +80,7 @@ begin
     detecteur:
         entity work.detecteurObstacle
         port map(
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK,
             InfoCourant => InfoCourant,
             SensMoteur => sig_SensMoteur,
@@ -94,7 +95,7 @@ begin
             duty => duty
         )
         port map(
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK,
             entree => ctrlPortail_PWM_SignalMoteur,
             --Sorties:
@@ -104,7 +105,7 @@ begin
     ctrlPortail:    
         entity work.ctrlPortail 
         port map(
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK, 
             FinDeCourse => FinDeCourse, 
             ControlSignal => ControlSignal, 
@@ -127,10 +128,10 @@ begin
     attendre2s:     
         entity work.Attendre 
         generic map(
-            Duree => 2 --Durée de l'attente, en secondes
+            Duree => 2 --DurÃ©e de l'attente, en secondes
         ) 
         port map(
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK, 
             Attente => ctrlPortail_attendre2s_Attente2s, 
             ForceReset => '0',
@@ -141,10 +142,10 @@ begin
     attendre30s:    
         entity work.Attendre 
         generic map(
-            Duree => TempsMaxPortailNonFerme --Durée de l'attente, en secondes
+            Duree => TempsMaxPortailNonFerme --DurÃ©e de l'attente, en secondes
         ) 
         port map(
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK,
             Attente => ctrlPortail_attendre30s_Attente, 
             ForceReset => '0',
@@ -155,7 +156,7 @@ begin
     cligno:         
         entity work.Cligno 
         port map(
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK, 
             active => ctrlPortail_cligno_Clignottant, 
             --Sorties:
