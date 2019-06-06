@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, SalomÈ Wattiaux, Marco Guzzon
+-- Engineer: Alban Benmouffek, Salom√© Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 25.02.2019 11:20:45
 -- Design Name: 
@@ -8,15 +8,14 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: Ce module contient toute la partie numÈrique dans le fonctionnement d'un portail automatique. 
---      AprËs avoir implÈmentÈ ce code dans un FPGA, il faudra y connecter:
+-- Description: Ce module contient toute la partie num√©rique dans le fonctionnement d'un portail automatique. 
+--      Apr√®s avoir impl√©ment√© ce code dans un FPGA, il faudra y connecter:
 --      -Le clavier matriciel (digicode)
 --      -L'interface moteur (pont en H et capteur de courant)
---      -L'horloge (oscillateur ‡ quartz)
+--      -L'horloge (oscillateur √† quartz)
 --      -Les capteurs de fin de course
 --      -Toutes les LED
 --      -L'Haut Parleur du Digicode
---      -Les dÈtecteurs d'obstacle
 -- 
 -- Dependencies: 
 --  Fonctionnement (Fonctionnement.vhd)
@@ -29,33 +28,33 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity Portail is
     Generic (
-        TempsMaxPortailNonFerme : integer := 60; --temps maximal ou le portail reste non fermÈ (en secondes)
-        DigicodeOvertime : integer := 10; --Temps d'inactivitÈ max du digicode (en secondes)
+        TempsMaxPortailNonFerme : integer := 60; --temps maximal ou le portail reste non ferm√© (en secondes)
+        DigicodeOvertime : integer := 10; --Temps d'inactivit√© max du digicode (en secondes)
 
         duty : integer := 80  --duty cycle du PWM, en %
          );
     Port ( 
         --Clavier matriciel: (plus d'infos dans Digicode.vhd)
-        lignes : out STD_LOGIC_VECTOR (3 downto 0);
-        colonnes : in STD_LOGIC_VECTOR (3 downto 0);        
+        lignes : out STD_LOGIC_VECTOR (3 downto 0); --lignes du clavier (mises une √† une √† l'√©tat logique '1')
+        colonnes : in STD_LOGIC_VECTOR (3 downto 0); --colonnes du clavier (lues pour en d√©duire les touches press√©es)
         
         --ENTREES DIVERSES:
         CLK : in STD_LOGIC; -- Horloge
-        bouton : in STD_LOGIC; --bouton
+        bouton : in STD_LOGIC; --Bouton pour controler le portail
         
         FinDeCourse : in STD_LOGIC_VECTOR (1 downto 0); --Capteur de fin de course
         -- FinDeCourse(1) = '1' <=> Portail Ferme ; FinDeCourse(0) = '1' <=> Portail Ouvert 
         
-        InfoCourant : in STD_LOGIC; --Signal indiquant si le moteur est bloquÈ ou non
+        InfoCourant : in STD_LOGIC; --Signal indiquant si le moteur est bloqu√© ou non
 
         --SORTIES DIVERSES:
         LED_Clignottant : out STD_LOGIC; --Clignottant orange
         LED_Eclairage : out STD_LOGIC; --Eclairage puissant autour du portail
         LED_digicode : out STD_LOGIC_VECTOR(4 downto 0); --5 LED pour le digicode
-        retroEclairageDigicode : out STD_LOGIC;
+        retroEclairageDigicode : out STD_LOGIC; --LED allum√©e si le digicode est en cours d'utilisation
         HP_digicode : out STD_LOGIC; --Haut parleur pour le digicode
-        --ContrÙle du moteur:
-        NonSensMoteur : out STD_LOGIC; 
+        --Contr√¥le du moteur:
+        NonSensMoteur : out STD_LOGIC; -- NonSensMoteur = '0' <=> Ouverture
         SensMoteur : out STD_LOGIC; -- SensMoteur = '1' <=> Ouverture
         SignalMoteur : out STD_LOGIC -- SignalMoteur = '1' <=> Moteur en marche
         );
@@ -68,19 +67,20 @@ architecture Behavioral of Portail is
     signal interface_fonctionnement_ForceFermeture : STD_LOGIC;
     signal interface_fonctionnement_Stop : STD_LOGIC;
     
+    --Signal de fin de course qui sera envoy√© dans CtrlPortail
     signal FinDeCourseSignal : STD_LOGIC_VECTOR (1 downto 0);
 begin
-    FinDeCourseSignal(0) <= not(FinDeCourse(0));
+    FinDeCourseSignal(0) <= not(FinDeCourse(0)); --On s'est tromp√© dans le montage du capteur donc les niveaux logiques sont invers√©s
     FinDeCourseSignal(1) <= FinDeCourse(1);
     
     fonctionnement:    
         entity work.Fonctionnement
         generic map(
             duty => duty,
-            TempsMaxPortailNonFerme => TempsMaxPortailNonFerme --temps maximal ou le portail reste non fermÈ (en secondes)
+            TempsMaxPortailNonFerme => TempsMaxPortailNonFerme --temps maximal ou le portail reste non ferm√© (en secondes)
         )
         port map(
-            --EntrÈes:
+            --Entr√©es:
             CLK => CLK, 
             FinDeCourse => FinDeCourseSignal, 
             ControlSignal => interface_fonctionnement_ControlSignal, 
@@ -102,7 +102,7 @@ begin
             DigicodeOvertime => DigicodeOvertime
         )
         port map(
-            --EntrÈes:
+            --Entr√©es:
             CLK => CLK, 
             colonnes => colonnes,
             boutonOuvrir => '0', 
