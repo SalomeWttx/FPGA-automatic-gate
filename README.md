@@ -23,7 +23,7 @@ We made simulation files for most entities of the project. Test benches are file
 
 * **Alban Benmouffek** - *VHDL code, schematics* - [sonibla](https://github.com/sonibla)
 * **Marco Guzzon** - *PCB, schematics, design of analog circuits*
-* **Alban Benmouffek** - *Documentation, obstacle detection*
+* **Salomé Wattiaux** - *Documentation, obstacle detection*
 
 ## License
 
