@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: Alban Benmouffek
+-- Company: ENSEA
+-- Engineer: Alban Benmouffek, Salomé Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 25.02.2019 10:50:01
 -- Design Name: 
@@ -10,12 +10,8 @@
 -- Tool Versions: 
 -- Description: simulation de DFM
 -- 
--- Dependencies: DFM
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
+-- Dependencies: 
+--  DFM (DFM.vhd)
 ----------------------------------------------------------------------------------
 
 
