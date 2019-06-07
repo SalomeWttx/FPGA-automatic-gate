@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, SalomÈ Wattiaux, Marco Guzzon
+-- Engineer: Alban Benmouffek, Salom√© Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 25.02.2019 11:37:56
 -- Design Name: 
@@ -8,7 +8,7 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: gere le clignottement du clignottant, ce module utilise une machine ‡ Ètats.
+-- Description: g√®re le clignottement du clignottant, ce module utilise une machine √† √©tats (pour allum√© ou √©teint).
 --  Un clignottement par seconde.
 --
 -- Dependencies: 
@@ -23,27 +23,27 @@ use IEEE.NUMERIC_STD.ALL;
 entity Cligno is
     Port ( 
         --ENTREES DIVERSES:
-        CLK : in STD_LOGIC;
+        CLK : in STD_LOGIC; --Horloge
         active : in STD_LOGIC; -- active = '1' <=> le clignottant doit clignotter
         
         --SORTIES DIVERSES:
-        lampe : out STD_LOGIC -- lampe = '1' <=> le clignottant est allumÈ
+        lampe : out STD_LOGIC -- lampe = '1' <=> le clignottant est allum√©
     );
 end Cligno;
 
 architecture Behavioral of Cligno is
     signal front : STD_LOGIC;--Signal qui va contenir le front montant de active
-    signal Tick : STD_LOGIC;--Signal qui passe ‡ '1' pendant une pÈriode d'horloge toutes les demi secondes
+    signal Tick : STD_LOGIC;--Signal qui passe √† '1' pendant une p√©riode d'horloge toutes les demi secondes
     signal changementEtat : STD_LOGIC;
     
-    --Liste des Ètats:
+    --Liste des √©tats:
     type liste_etat is (Allume, Eteint);
     signal ETAT_PR, ETAT_FU : liste_etat:=Eteint;
 begin
     dfm: 
         entity work.DFM 
         port map(
-            --EntrÈes:
+            --Entr√©es:
             CLK => CLK, 
             entree => active,
             --Sorties: 
@@ -55,7 +55,7 @@ begin
         generic map(
             N => 1 --Un 'Tick' toutes les demi secondes
         ) port map(
-            --EntrÈes:
+            --Entr√©es:
             CLK => CLK, 
             Reset => front,
             --Sorties: 
@@ -64,14 +64,16 @@ begin
     
     changementEtat <= '1' when front = '1' or Tick = '1' else '0';
     
-    --Actualisation de l'Ètat prÈsent:
+            
+    --Actualisation de l'√©tat pr√©sent:
     process(CLK) begin
         if rising_edge(CLK) then
             ETAT_PR <= ETAT_FU;
         end if;
     end process;
     
-    --Calcul de l'Ètat futur:
+            
+    --Calcul de l'√©tat futur:
     process(ETAT_PR, active, changementEtat) begin
         case ETAT_PR is
             when Eteint =>
@@ -91,6 +93,7 @@ begin
         end case;
     end process;
     
+            
     --Calcul des sorties:
     process(ETAT_PR) begin
         case ETAT_PR is
