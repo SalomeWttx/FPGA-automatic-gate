@@ -1,21 +1,17 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
+-- Company: ENSEA
+-- Engineer: Alban Benmouffek, Salomé Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 01.03.2019 16:00:23
 -- Design Name: 
 -- Module Name: tone_tb - Behavioral
--- Project Name: 
+-- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: 
+-- Description: Simulation de tone
 -- 
 -- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
+--  tone (tone.vhd)
 ----------------------------------------------------------------------------------
 
 
