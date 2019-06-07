@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, Salomé Wattiaux, Marco Guzzon
+-- Engineer: Alban Benmouffek, SalomÃ© Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 26.02.2019 16:33:13
 -- Design Name: 
@@ -8,9 +8,10 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: simulation de PWM.vhd
+-- Description: simulation de PWM
 -- 
 -- Dependencies:
+--  PWM (PWM.vhd)
 ----------------------------------------------------------------------------------
 
 
