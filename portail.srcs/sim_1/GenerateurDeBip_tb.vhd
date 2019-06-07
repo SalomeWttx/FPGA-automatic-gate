@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: Alban Benmouffek
+-- Company: ENSEA
+-- Engineer: Alban Benmouffek, Salomé Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 26.02.2019 16:33:13
 -- Design Name: 
@@ -10,12 +10,8 @@
 -- Tool Versions: 
 -- Description: simulation de generateurdebip.vhd
 -- 
--- Dependencies: GenerateurDeBip
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
+-- Dependencies: 
+--  GenerateurDeBip (GenerateurDeBip.vhd)
 ----------------------------------------------------------------------------------
 
 
