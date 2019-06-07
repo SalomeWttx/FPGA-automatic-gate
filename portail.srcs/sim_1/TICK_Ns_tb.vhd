@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
--- Company: 
--- Engineer: Alban Benmouffek
+-- Company: ENSEA
+-- Engineer: Alban Benmouffek, Salomé Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 25.02.2019 08:30:51
 -- Design Name: 
@@ -10,12 +10,8 @@
 -- Tool Versions: 
 -- Description: simulation de TICK_Ns
 -- 
--- Dependencies: TICK_Ns
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
+-- Dependencies: 
+--  TICK_Ns (TICK_Ns.vhd)
 ----------------------------------------------------------------------------------
 
 
