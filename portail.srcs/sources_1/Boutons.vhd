@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, SalomÈ Wattiaux, Marco Guzzon
+-- Engineer: Alban Benmouffek, Salom√© Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 25.02.2019 12:36:17
 -- Design Name: 
@@ -8,7 +8,7 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: traite le signal recu de la part des boutos (anti pic et DFM)
+-- Description: traite le signal recu de la part des boutons (applique au signal un anti pic, puis ne renvoie en sortie que les fronts montants de l'entr√©e)
 --
 -- Dependencies: 
 --  TICK_1ms (TICK_1ms.vhd)
@@ -29,13 +29,13 @@ entity Boutons is
         boutonOuvrir_IN : in STD_LOGIC; -- vaut '1' si on veut ouvrir le portail
         boutonStop_IN : in STD_LOGIC; -- vaut '1' si on veut fermer le portail
         boutonFermer_IN : in STD_LOGIC; -- vaut '1' si on veut fermer le portail
-        boutonChange_IN : in STD_LOGIC; -- vaut '1' si on veut changer l'Ètat du portail
+        boutonChange_IN : in STD_LOGIC; -- vaut '1' si on veut changer l'√©tat du portail
         
         --SORTIES:
         boutonOuvrir_OUT : out STD_LOGIC; -- vaut '1' si on veut ouvrir le portail
         boutonStop_OUT : out STD_LOGIC; -- vaut '1' si on veut fermer le portail
         boutonFermer_OUT : out STD_LOGIC; -- vaut '1' si on veut fermer le portail
-        boutonChange_OUT : out STD_LOGIC -- vaut '1' si on veut changer l'Ètat du portail
+        boutonChange_OUT : out STD_LOGIC -- vaut '1' si on veut changer l'√©tat du portail
        
         
     );
@@ -44,14 +44,14 @@ end Boutons;
 architecture Behavioral of Boutons is
     signal Tick1 : STD_LOGIC := '0'; --un 'Tick' toutes les ms
     
-    signal brut : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-    signal sansPic : STD_LOGIC_VECTOR(3 downto 0) := "0000";
-    signal frontMontant : STD_LOGIC_VECTOR(3 downto 0) := "0000";
+    signal brut : STD_LOGIC_VECTOR(3 downto 0) := "0000"; --Signaux recus directement de la part des boutons (vient de l'entr√©e)
+    signal sansPic : STD_LOGIC_VECTOR(3 downto 0) := "0000"; --Signaux sans pics
+    signal frontMontant : STD_LOGIC_VECTOR(3 downto 0) := "0000"; --Fronts montants (sera envoy√© sur la sortie)
 begin
     tick_1ms: 
         entity work.TICK_1ms 
         port map(
-            --EntrÈes:
+            --Entr√©es:
             CLK => CLK, 
             --Sorties:
             Tick => Tick1
@@ -64,7 +64,7 @@ begin
             dim => 4 --Nombre de touches
         ) 
         port map(
-            --EntrÈes:
+            --Entr√©es:
             CLK => CLK, 
             Tick => Tick1,
             Sig_IN => brut, 
@@ -78,18 +78,21 @@ begin
             dim => 4 --Nombre de touches
         ) 
         port map (
-            --EntrÈes:
+            --Entr√©es:
             CLK => CLK, 
             entree => sansPic, 
             --Sorties:
             front => frontMontant
         );
     
+    --Lecture des signaux d'entr√©e:
     brut(0) <= boutonOuvrir_IN;
     brut(1) <= boutonStop_IN;
     brut(2) <= boutonFermer_IN;
     brut(3) <= boutonChange_IN;
     
+
+    --Sorties:
     boutonOuvrir_OUT <= frontMontant(0);
     boutonStop_OUT <= frontMontant(1);
     boutonFermer_OUT <= frontMontant(2);
