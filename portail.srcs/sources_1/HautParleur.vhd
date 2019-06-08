@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, Salom� Wattiaux, Marco Guzzon
+-- Engineer: Alban Benmouffek, Salomé Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 01.03.2019 14:44:11
 -- Design Name: 
@@ -8,8 +8,15 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: gestion du haut parleur. Permet de g�n�rer des bips de dur�e et de tonalit� variable.
--- La sortie doit �tre reli�e � un haut parleur.
+-- Description: gestion du haut parleur. Permet de générer des bips de durée et de tonalité variable.
+-- La sortie (sound) doit être reliée à un haut parleur.
+-- 
+-- Les bips peuvent être aigus (entrée ton_IN à '1') ou graves (entrée ton_IN à '0') 
+-- Le nombre de répétitions est paramêtré en binaire par l'entrée repetition (maximum 7 répétitions)
+-- La durée de chaque bip est égale à la durée séparant 2 bips consécutifs. Elle est paramêtrée par l'entrée duree (en 10ème de seconde, codé en binaire, max. 12.7s!)
+--
+-- Pour créer en bip, il faut pendant une période d'horloge saisir les paramêtres (détaillés ci-dessus) ET mettre l'entrée incomingData à '1'.
+-- Le bip sera joué dès que l'entrée incomingData repasse à '0'.
 --
 -- Dependencies:
 --  GenerateurDeBip (GenerateurDeBip.vhd)
@@ -25,13 +32,13 @@ entity HautParleur is
         --ENTREES:
         CLK : in STD_LOGIC; --Horloge
         
-        incomingData : in STD_LOGIC; --Vaut '1' pendant une p�riode d'horloge quand des nouvelles donn�es sont envoy�es
-        duree : in STD_LOGIC_VECTOR(6 downto 0); --Dur�e de chaque bip, ainsi que entre les bip, en dixieme de seconde MAX 12,7s !
-        repetition : in STD_LOGIC_VECTOR(2 downto 0); --Nombre de r�p�titions. MAX 7 REPETITIONS!
+        incomingData : in STD_LOGIC; --Vaut '1' pendant une période d'horloge quand des nouvelles données sont envoyées
+        duree : in STD_LOGIC_VECTOR(6 downto 0); --Durée de chaque bip, ainsi que entre les bip, en dixieme de seconde MAX 12,7s !
+        repetition : in STD_LOGIC_VECTOR(2 downto 0); --Nombre de répétitions. MAX 7 REPETITIONS!
         ton_IN : in STD_LOGIC;-- ton_IN = '1' <=> bip aigu!
         
         --SORTIES:
-        sound : out STD_LOGIC
+        sound : out STD_LOGIC --Signal directement envoyé à l'haut parleur
     );
 end HautParleur;
 
@@ -43,7 +50,7 @@ begin
     tone:
         entity work.tone
         port map(
-            --Entr�es:
+            --Entrées:
             CLK => CLK,
             duree => duree,
             repetition => repetition,
@@ -57,7 +64,7 @@ begin
     bip:            
         entity work.GenerateurDeBip 
         port map(
-            --Entr�es:
+            --Entrées:
             CLK => CLK, 
             active => tone_bip_HautParleurdigicode, 
             tonalite => tone_bip_TonBip, 
