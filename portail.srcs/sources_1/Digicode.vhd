@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, Salomé Wattiaux, Marco Guzzon
+-- Engineer: Alban Benmouffek, SalomÃ© Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 25.02.2019 12:36:17
 -- Design Name: 
@@ -10,9 +10,9 @@
 -- Tool Versions: 
 -- Description: lit un clavier matriciel (4 lignes, 4 colonnes)
 --      Fonctionnement:
---          Les lignes sont des sorties. Les colonnes des entrées.
---          Toutes les lignes sont mises au niveau '0' sauf une (la ligne à '1'
---          change très rapidement). Les colonnes à '1' correspondent donc à un appui sur un bouton.
+--          Les lignes sont des sorties du FPGA. Les colonnes des entrÃ©es.
+--          Toutes les lignes sont mises au niveau '0' sauf une (la ligne Ã  '1'
+--          change trÃ¨s rapidement). Les colonnes Ã  '1' correspondent donc Ã  un appui sur un bouton.
 --
 --touche      colonnes(0)     colonnes(1)     colonnes(2)     colonnes(3)
 --lignes(0)       1               2               3              10
@@ -20,12 +20,19 @@
 --lignes(2)       7               8               9              12
 --lignes(3)       15              0              14              13
 --
--- Quand une touche est détectée, l'info est envoyée dans numeroTouche tel que ci-dessus, pendant une période d'horloge.
--- Quand l'info est envoyée, on met à '1' toucheDetectee. La détection d'une touche se fait sur front montant unuiquement.
+-- Quand une touche est dÃ©tectÃ©e, l'info est envoyÃ©e dans numeroTouche tel que ci-dessus, pendant une pÃ©riode d'horloge.
+-- Quand l'info est envoyÃ©e, on met Ã  '1' toucheDetectee. La dÃ©tection d'une touche se fait sur front montant uniquement.
 --
--- Ce module contient une fonctionnalité Anti Pic, introduisant un retard de quelques ms (20ms par défaut).
--- Hormis ce module, le clavier (Brut) est actualisé toutes les 8ms. Ce paramètre peut être changé via la variable N de tick_Nms.
--- Dans ce cas, le clavier sera actualisé toutes les N*8 ms.
+-- Ce module contient une fonctionnalitÃ© Anti Pic, introduisant un retard de quelques ms (20ms par dÃ©faut).
+-- Hormis ce module, le clavier (Brut) est actualisÃ© toutes les 8ms. Ce paramÃ¨tre peut Ãªtre changÃ© via la variable N de tick_Nms.
+-- Dans ce cas, le clavier sera actualisÃ© toutes les N*8 ms.
+--
+-- L'entitÃ© capteur se charge de mettre Ã  '1' une seule ligne, change la ligne Ã  '1', et lit les colonnes actives. 
+-- capteur envoie alors le signal brut Ã  l'entitÃ© antipic, sous forme d'un vecteur Ã  16 Ã©lÃ©ments (1 par touche du clavier)
+-- AprÃ¨s le traÃ®tement par antipic, le signal est envoyÃ© Ã  l'entitÃ© dfm, qui ne garde que les fronts montants de chaque Ã©lÃ©ment du signal
+-- Enfin, l'entitÃ© traducteur prend en entrÃ©e un signal vecteur 16 colonnes contenant les fronts montants du clavier, et donne en sortie le numÃ©ro de la touche en binaire (numeroTouche),
+-- ainsi qu'un signal toucheDetectee qui vaut '1' pendant une pÃ©riode d'horloge si une nouvelle touche est pressÃ©e.
+--
 --
 -- Dependencies: 
 --  TICK_1ms (TICK_1ms.vhd)
@@ -49,17 +56,17 @@ entity Digicode is
         lignes : out STD_LOGIC_VECTOR (3 downto 0);
         colonnes : in STD_LOGIC_VECTOR (3 downto 0);
         
-        --Information récupérée:
-        numeroTouche : out STD_LOGIC_VECTOR (3 downto 0); --Numéro de la touhe détectée (détails dans la description)
-        toucheDetectee : out STD_LOGIC --Vaut '1' pendant une période d'horloge quand une nouvelle touche est détectée
+        --Information rÃ©cupÃ©rÃ©e:
+        numeroTouche : out STD_LOGIC_VECTOR (3 downto 0); --NumÃ©ro de la touhe dÃ©tectÃ©e (dÃ©tails dans la description)
+        toucheDetectee : out STD_LOGIC --Vaut '1' pendant une pÃ©riode d'horloge quand une nouvelle touche est dÃ©tectÃ©e
     );
 end Digicode;
 
 architecture Behavioral of Digicode is
-    signal TickN : STD_LOGIC := '0'; --un 'Tick' toutes les N ms (par défaut 1)
+    signal TickN : STD_LOGIC := '0'; --un 'Tick' toutes les N ms (par dÃ©faut 1)
     signal Tick1 : STD_LOGIC := '0'; --un 'Tick' toutes les ms
-    signal clavierBrut : STD_LOGIC_VECTOR (15 downto 0); --Clavier sans traitement (brut de décoffrage)
-    signal clavierSansPic : STD_LOGIC_VECTOR (15 downto 0); --Clavier sans Pic (mais avec un léger retard)
+    signal clavierBrut : STD_LOGIC_VECTOR (15 downto 0); --Clavier sans traitement (brut de dÃ©coffrage)
+    signal clavierSansPic : STD_LOGIC_VECTOR (15 downto 0); --Clavier sans Pic (mais avec un lÃ©ger retard)
     signal clavierFrontMontant : STD_LOGIC_VECTOR (15 downto 0); --Fronts montants
 
 begin
@@ -67,7 +74,7 @@ begin
     tick_1ms: 
         entity work.TICK_1ms 
         port map(
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK, 
             --Sorties:
             Tick => Tick1
@@ -79,7 +86,7 @@ begin
             N => 1
         ) 
         port map(
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK,  
             Reset => '0',
             --Sorties:
@@ -89,7 +96,7 @@ begin
     capteur: 
         entity work.ClavMatriciel 
         port map(
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK,
             colonnes => colonnes, 
             Tick => TickN,  
@@ -105,7 +112,7 @@ begin
             dim => 16 --Nombre de touches
         ) 
         port map(
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK, 
             Tick => Tick1,
             Sig_IN => clavierBrut, 
@@ -119,7 +126,7 @@ begin
             dim => 16 --Nombre de touches
         ) 
         port map (
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK, 
             entree => clavierSansPic, 
             --Sorties:
@@ -129,7 +136,7 @@ begin
     traducteur : 
         entity work.TransposeurDigicode 
         port map (
-            --Entrées:
+            --EntrÃ©es:
             CLK => CLK, 
             clavier => clavierFrontMontant,
             --Sorties: 
