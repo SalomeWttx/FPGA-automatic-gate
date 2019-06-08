@@ -45,7 +45,7 @@ entity Interface is
         ControlSignal : out STD_LOGIC; --Demande de changement d'état du portail (comme si on avait une télécommande à 1 bouton) (activé que pendant une période d'horloge)
         Stop : out STD_LOGIC; --Demande d'arrêt du portail
         
-        retroEclairageDigicode : out STD_LOGIC;
+        retroEclairageDigicode : out STD_LOGIC; --Eclairage du calvier si on est en train de l'utiliser
         LED_digicode : out STD_LOGIC_VECTOR(4 downto 0); --5 LED pour le digicode
         HP_digicode : out STD_LOGIC --Haut parleur pour le digicode
         
