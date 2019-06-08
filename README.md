@@ -14,6 +14,7 @@ A description of each part of the project is given at the beginning of every fil
 ### Prerequisites
 
 To make a working portal, you'll need a FPGA, and all physical components connected to the FPGA (motor, H-bridge, 16-digit keyboard...)
+Attention : the FPGA's clock must be 100Mhz !
 
 ## Running the tests
 
