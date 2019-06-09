@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, Salom� Wattiaux, Marco Guzzon 
+-- Engineer: Alban Benmouffek, Salomé Wattiaux, Marco Guzzon 
 -- 
 -- Create Date: 25.02.2019 12:36:17
 -- Design Name: 
@@ -8,19 +8,27 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: lit un clavier matriciel (4 lignes, 4 colonnes) SORTIE: le clavier reconstitu�
+-- Description: lit un clavier matriciel (4 lignes, 4 colonnes) SORTIE: le clavier reconstitué sous forme de vecteur 16 composantes
 --clavier     colonnes(0)     colonnes(1)     colonnes(2)     colonnes(3)
 --lignes(0)       0               1               2               3
 --lignes(1)       4               5               6               7
 --lignes(2)       8               9               10              11
 --lignes(3)       12              13              14              15
-
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
+--
+--
+-- Pseudo chronogramme: (un '-' par milliseconde)
+--   ...
+--  -on met la ligne 0 à '1' et toutes les autres à '0'
+--  -on lit le signal venant des colonnes et on le stocke dans clavier
+--  -on met la ligne 1 à '1' et toutes les autres à '0'
+--  -on lit le signal venant des colonnes et on le stocke dans clavier
+--  -on met la ligne 2 à '1' et toutes les autres à '0'
+--  -on lit le signal venant des colonnes et on le stocke dans clavier
+--  -on met la ligne 3 à '1' et toutes les autres à '0'
+--  -on lit le signal venant des colonnes et on le stocke dans clavier
+--  -on copie clavier sur clavier_all
+--   ...
+--  
 ----------------------------------------------------------------------------------
 
 
@@ -31,43 +39,47 @@ use IEEE.NUMERIC_STD.ALL;
 entity ClavMatriciel is
     Port ( 
         CLK : in STD_LOGIC; --Horloge
-        tick : in STD_LOGIC; -- 1 milliseconde
+        tick : in STD_LOGIC; -- 1 Tick toutes les millisecondes
                 
         --Capteurs Clavier:
         lignes : out STD_LOGIC_VECTOR (3 downto 0);
         colonnes : in STD_LOGIC_VECTOR (3 downto 0);
         
-        Clavier_OUT : out STD_LOGIC_VECTOR(15 downto 0) --Clavier Reconstitu�
+        Clavier_OUT : out STD_LOGIC_VECTOR(15 downto 0) --Clavier Reconstitué
         
     );
 end ClavMatriciel;
 
 architecture Behavioral of ClavMatriciel is
-    signal numeroLigne : integer range 0 to 3 := 0;
+    signal numeroLigne : integer range 0 to 3 := 0; --Ligne qui sera à '1'. Change en permanence
     signal colonnesOK : STD_LOGIC := '0'; --Signal indiquant si on peut capter le signal des colonnes
-    signal clavier : STD_LOGIC_VECTOR(15 downto 0) := "0000000000000000";--ce signal est actualis� ligne par ligne
-    signal clavier_all : STD_LOGIC_VECTOR(15 downto 0) := "0000000000000000";--ce signal est actualis� tout d'un coup
+
+    signal clavier : STD_LOGIC_VECTOR(15 downto 0) := "0000000000000000";--ce signal est actualisé ligne par ligne
+    signal clavier_all : STD_LOGIC_VECTOR(15 downto 0) := "0000000000000000";--ce signal est actualisé tout d'un coup (une fois que les 4 lignes ont été actualisées)
+    --La période d'actualisation de clavier_all est donc 4 fois plus grande que celle de clavier.
 begin
     
     process(CLK, numeroLigne, clavier, clavier_all) begin
         if rising_edge(CLK) then
             
+            --On vérifie s'il est l'heure de passer à la ligne suivante
             if tick = '1' then
-                if colonnesOK = '1' then
+                if colonnesOK = '1' then --Oui, on peut passer à la ligne suivante
                     if numeroLigne = 3 then
                         numeroLigne <= 0;
                     else
                         numeroLigne <= numeroLigne + 1;
                     end if;
-                    colonnesOK <= NOT(colonnesOK);
+                    colonnesOK <= NOT(colonnesOK); --On vient de changer de ligne, on ne peut pas immédiatement lire le signal venant des colonnes
                 else
-                    colonnesOK <= NOT(colonnesOK);
+                    colonnesOK <= NOT(colonnesOK); --On est resté sur la même ligne depuis 1ms : on peut lire le signal venant des colonnes
                 end if;
             else
                 numeroLigne <= numeroLigne;
                 colonnesOK <= colonnesOK;
             end if;
             
+                
             --On met a '1' uniquement la ligne numero numeroLigne
             if numeroLigne = 0 then
                 lignes(0) <= '1';
@@ -96,6 +108,7 @@ begin
                 lignes(3) <= '0';                        
             end if;
             
+                
             --On actualise le clavier
             if colonnesOK = '1' then
                 if numeroLigne = 0 then
@@ -127,9 +140,9 @@ begin
             else
                 clavier <= clavier;
             end if;
-            
         end if;
         
+        --Enfin, si on a parcouru les 4 lignes, on peut actualiser clavier_all
         if numeroLigne = 0 then
             clavier_all <= clavier;
         else
@@ -137,6 +150,7 @@ begin
         end if;
     end process;
     
+    --On met sur la sortie le clavier, actualisé tout d'un coup
     Clavier_OUT <= clavier_all;
     
 end Behavioral;
