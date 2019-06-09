@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, Salom� Wattiaux, Marco Guzzon 
+-- Engineer: Alban Benmouffek, Salomé Wattiaux, Marco Guzzon 
 -- 
 -- Create Date: 01.03.2019 19:05:30
 -- Design Name: 
@@ -8,9 +8,13 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: g�re l'authentification du propri�taire via des boutons plac�s � l'int�rieur de la maison
+-- Description: gère l'authentification du propriétaire via des boutons placés à l'intérieur de la maison. Voilà.
 --
--- Dependencies: 
+-- La priorité est donnée au bouton stop (si le bouton stop est pressé tous les autres boutons sont ignorée)
+-- boutonChange est le deuxième bouton prioritaire
+--Pour ouvrir et fermer, il faut que un seul des deux soit pressé pour que a demande soit prise en compte
+--
+--
 ----------------------------------------------------------------------------------
 
 library IEEE;
@@ -19,14 +23,14 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity GestionBoutons is
     Port ( 
-        CLK : in STD_LOGIC;
+        CLK : in STD_LOGIC; --Horloge
         
         boutonOuvrir : in STD_LOGIC; -- vaut '1' si on veut ouvrir le portail
         boutonStop : in STD_LOGIC; -- vaut '1' si on veut fermer le portail
         boutonFermer : in STD_LOGIC; -- vaut '1' si on veut fermer le portail
-        boutonChange : in STD_LOGIC; -- vaut '1' si on veut changer l'�tat du portail
+        boutonChange : in STD_LOGIC; -- vaut '1' si on veut changer l'état du portail
         
-        fonction : out STD_LOGIC_VECTOR(2 downto 0)
+        fonction : out STD_LOGIC_VECTOR(2 downto 0) --Ordre donné au portail
         --ORDRES:
         --rien : "000"
         --changer : "011"
