@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, Salomé Wattiaux, Marco Guzzon 
+-- Engineer: Alban Benmouffek, SalomÃ© Wattiaux, Marco Guzzon 
 -- 
 -- Create Date: 01.03.2019 19:05:30
 -- Design Name: 
@@ -8,7 +8,7 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: gère l'authentification du propriétaire via les télécommandes (ne programme pas de nouvelle télécommande et ne gère pas les signaux physiquement envoyés : ne gère que le flux de données)
+-- Description: gÃ¨re l'authentification du propriÃ©taire via les tÃ©lÃ©commandes (ne programme pas de nouvelle tÃ©lÃ©commande et ne gÃ¨re pas les signaux physiquement envoyÃ©s : ne gÃ¨re que le flux de donnÃ©es)
 --
 -- Dependencies: 
 ----------------------------------------------------------------------------------
@@ -19,7 +19,7 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity GestionTelecommunications is
     Port ( 
-        CLK : in STD_LOGIC;
+        CLK : in STD_LOGIC; --Horlore
         
         fonction : out STD_LOGIC_VECTOR(2 downto 0)
         --ORDRES:
@@ -36,7 +36,7 @@ architecture Behavioral of GestionTelecommunications is
 begin
     process(CLK) begin
         if rising_edge(CLK) then
-            fonction_sg <= "000";
+            fonction_sg <= "000"; --C'est un peu vide ici (fonctionnalitÃ© pas encore crÃ©Ã©e)
         end if;
     end process;
     
