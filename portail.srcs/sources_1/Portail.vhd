@@ -12,7 +12,7 @@
 --      Après avoir implémenté ce code dans un FPGA, il faudra y connecter:
 --      -Le clavier matriciel (digicode)
 --      -L'interface moteur (pont en H et capteur de courant)
---      -L'horloge (oscillateur à quartz)
+--      -L'horloge (oscillateur à quartz)   !!ATTENTION!! L'horloge doit être à 100Mhz !
 --      -Les capteurs de fin de course
 --      -Toutes les LED
 --      -L'Haut Parleur du Digicode
@@ -39,7 +39,7 @@ entity Portail is
         colonnes : in STD_LOGIC_VECTOR (3 downto 0); --colonnes du clavier (lues pour en déduire les touches pressées)
         
         --ENTREES DIVERSES:
-        CLK : in STD_LOGIC; -- Horloge
+        CLK : in STD_LOGIC; -- Horloge 100MHz
         bouton : in STD_LOGIC; --Bouton pour controler le portail
         
         FinDeCourse : in STD_LOGIC_VECTOR (1 downto 0); --Capteur de fin de course
@@ -50,7 +50,7 @@ entity Portail is
         --SORTIES DIVERSES:
         LED_Clignottant : out STD_LOGIC; --Clignottant orange
         LED_Eclairage : out STD_LOGIC; --Eclairage puissant autour du portail
-        LED_digicode : out STD_LOGIC_VECTOR(4 downto 0); --5 LED pour le digicode
+        LED_digicode : out STD_LOGIC_VECTOR(4 downto 0); --5 LED pour le digicode (permet de savoir quelle fonction spéciale est utilisée, voir liste des fonctions dans gestionCode.vhd)
         retroEclairageDigicode : out STD_LOGIC; --LED allumée si le digicode est en cours d'utilisation
         HP_digicode : out STD_LOGIC; --Haut parleur pour le digicode
         --Contrôle du moteur:
