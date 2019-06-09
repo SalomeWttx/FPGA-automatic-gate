@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, SalomÈ Wattiaux, Marco Guzzon 
+-- Engineer: Alban Benmouffek, Salom√© Wattiaux, Marco Guzzon 
 -- 
 -- Create Date: 01.03.2019 19:08:05
 -- Design Name: 
@@ -8,9 +8,9 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: GËre les ordres donnÈs au portail une fois que l'authentification est faite.
---      Les ordres sont directement envoyÈs ‡ l'entitÈ fonctionnement.
--- Ce module est une machine ‡ Ètats.
+-- Description: G√®re les ordres donn√©s au portail une fois que l'authentification est faite.
+--      Les ordres sont directement envoy√©s √† l'entit√© fonctionnement.
+-- Ce module est une machine √† √©tats.
 -- 
 -- Dependencies: 
 ----------------------------------------------------------------------------------
@@ -35,38 +35,38 @@ entity GestionPortail is
         --Ordres venant du Digicode:
         fonctionDigicode : in STD_LOGIC_VECTOR(2 downto 0);
         
-        --Ordres venant d'une tÈlÈcommande:
+        --Ordres venant d'une t√©l√©commande:
         fonctionTelecommande : in STD_LOGIC_VECTOR(2 downto 0);
         
-        --Ordres venant des boutons ‡ l'intÈrieur de la maison:
+        --Ordres venant des boutons √† l'int√©rieur de la maison:
         fonctionBoutons : in STD_LOGIC_VECTOR(2 downto 0);
         
         
         
         --SORTIES:
-        ControlSignal : out STD_LOGIC; --Demande de changement d'Ètat du portail (comme si on avait une tÈlÈcommande ‡ 1 bouton) (activÈ que pendant une pÈriode d'horloge)
-        ForceFermeture : out STD_LOGIC; --Demande de fermeture du portail (activÈ que pendant une pÈriode d'horloge)
-        Stop : out STD_LOGIC; --Demande d'arrÍt du portail
-        ForceOuverture : out STD_LOGIC --Demande d'ouverture du portail (activÈ que pendant une pÈriode d'horloge)
+        ControlSignal : out STD_LOGIC; --Demande de changement d'√©tat du portail (comme si on avait une t√©l√©commande √† 1 bouton) (activ√© que pendant une p√©riode d'horloge)
+        ForceFermeture : out STD_LOGIC; --Demande de fermeture du portail (activ√© que pendant une p√©riode d'horloge)
+        Stop : out STD_LOGIC; --Demande d'arr√™t du portail
+        ForceOuverture : out STD_LOGIC --Demande d'ouverture du portail (activ√© que pendant une p√©riode d'horloge)
     );
 end GestionPortail;
 
 architecture Behavioral of GestionPortail is
-    --Liste des Ètats:
+    --Liste des √©tats:
     type liste_etat is (Attente, OrdreOuverture, OrdreChange, OrdreFermeture, OrdreStop);
     signal ETAT_PR, ETAT_FU : liste_etat:=Attente;
 begin
-    --Actualisation de l'Ètat prÈsent:
+    --Actualisation de l'√©tat pr√©sent:
     process(CLK) begin
         if rising_edge(CLK) then
             ETAT_PR <= ETAT_FU;
         end if;
     end process;
     
-    --Calcul de l'Ètat futur:
+    --Calcul de l'√©tat futur:
     process(ETAT_PR, fonctionDigicode, fonctionTelecommande, fonctionBoutons) begin
         case ETAT_PR is
-            when Attente =>
+            when Attente => --On est dans l'attente de recevoir un ordre
                 if fonctionDigicode = "011" or fonctionTelecommande = "011" or fonctionBoutons = "011" then
                     ETAT_FU <= OrdreChange;
                 elsif fonctionDigicode = "001" or fonctionTelecommande = "001" or fonctionBoutons = "001" then
@@ -78,13 +78,13 @@ begin
                 else
                     ETAT_FU <= Attente;
                 end if;
-            when OrdreOuverture =>
+            when OrdreOuverture => --On a re√ßu l'ordre d'ouvrir le portail
                 ETAT_FU <= Attente;
-            when OrdreChange =>
+            when OrdreChange => --On a re√ßu l'ordre de changer l'√©tat du portail
                 ETAT_FU <= Attente;
-            when OrdreFermeture =>
+            when OrdreFermeture => --On a re√ßu l'ordre de fermer le portail
                 ETAT_FU <= Attente;
-            when OrdreStop =>
+            when OrdreStop => --On a re√ßu l'ordre d'arr√™ter le portail
                 ETAT_FU <= Attente;
             when others =>
                 ETAT_FU <= Attente;
