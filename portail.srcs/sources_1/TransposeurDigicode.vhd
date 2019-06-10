@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, SalomÈ Wattiaux, Marco Guzzon 
+-- Engineer: Alban Benmouffek, Salom√© Wattiaux, Marco Guzzon 
 -- 
 -- Create Date: 25.02.2019 16:07:36
 -- Design Name: 
@@ -8,7 +8,7 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: prend en entree le clavier, donne en sortie le numero de la touche correspondante
+-- Description: prend en entree le clavier (sous forme de vecteur), donne en sortie le numero de la touche correspondante (numeroTouche) et un signal qui vaut '1' pendant une p√©riode d'horloge quand une nouvelle touche est d√©tect√©e (toucheDetectee)
 --clavier     colonnes(0)     colonnes(1)     colonnes(2)     colonnes(3)
 --lignes(0)       0               1               2               3
 --lignes(1)       4               5               6               7
@@ -22,12 +22,7 @@
 --lignes(2)       7               8               9              12
 --lignes(3)       15              0              14              13
 --
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
+--
 ----------------------------------------------------------------------------------
 
 
@@ -37,10 +32,13 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity TransposeurDigicode is
     Port ( 
-        CLK : in STD_LOGIC;
-        clavier : in STD_LOGIC_VECTOR (15 downto 0);
-        toucheDetectee : out STD_LOGIC;
-        numeroTouche : out STD_LOGIC_VECTOR (3 downto 0)
+        --ENTREES:
+        CLK : in STD_LOGIC; --Horloge
+        clavier : in STD_LOGIC_VECTOR (15 downto 0); --Clavier, sous forme de vecteur
+        
+        --SORTIES:
+        toucheDetectee : out STD_LOGIC; --Signal indiquant si une nouvelle touche est press√©e
+        numeroTouche : out STD_LOGIC_VECTOR (3 downto 0) --Num√©ro de la touche d√©tect√©e
         );
 end TransposeurDigicode;
 
@@ -49,52 +47,52 @@ begin
     process(CLK) begin
         if rising_edge(CLK) then
             if clavier(0) = '1' then
-                numeroTouche <= "0001"; --clavier(0) = '1' correspond ‡ la touche 1
+                numeroTouche <= "0001"; --clavier(0) = '1' correspond √† la touche 1
                 toucheDetectee <= '1';
             elsif clavier(1) = '1' then
-                numeroTouche <= "0010"; --clavier(1) = '1' correspond ‡ la touche 2
+                numeroTouche <= "0010"; --clavier(1) = '1' correspond √† la touche 2
                 toucheDetectee <= '1';
             elsif clavier(2) = '1' then
-                numeroTouche <= "0011"; --clavier(2) = '1' correspond ‡ la touche 3
+                numeroTouche <= "0011"; --clavier(2) = '1' correspond √† la touche 3
                 toucheDetectee <= '1';
             elsif clavier(3) = '1' then
-                numeroTouche <= "1010"; --clavier(3) = '1' correspond ‡ la touche 10
+                numeroTouche <= "1010"; --clavier(3) = '1' correspond √† la touche 10
                 toucheDetectee <= '1';
             elsif clavier(4) = '1' then
-                numeroTouche <= "0100"; --clavier(4) = '1' correspond ‡ la touche 4
+                numeroTouche <= "0100"; --clavier(4) = '1' correspond √† la touche 4
                 toucheDetectee <= '1';
             elsif clavier(5) = '1' then
-                numeroTouche <= "0101"; --clavier(5) = '1' correspond ‡ la touche 5
+                numeroTouche <= "0101"; --clavier(5) = '1' correspond √† la touche 5
                 toucheDetectee <= '1';
             elsif clavier(6) = '1' then
-                numeroTouche <= "0110"; --clavier(6) = '1' correspond ‡ la touche 6
+                numeroTouche <= "0110"; --clavier(6) = '1' correspond √† la touche 6
                 toucheDetectee <= '1';
             elsif clavier(7) = '1' then
-                numeroTouche <= "1011"; --clavier(7) = '1' correspond ‡ la touche 11
+                numeroTouche <= "1011"; --clavier(7) = '1' correspond √† la touche 11
                 toucheDetectee <= '1';
             elsif clavier(8) = '1' then
-                numeroTouche <= "0111"; --clavier(8) = '1' correspond ‡ la touche 7
+                numeroTouche <= "0111"; --clavier(8) = '1' correspond √† la touche 7
                 toucheDetectee <= '1';
             elsif clavier(9) = '1' then
-                numeroTouche <= "1000"; --clavier(9) = '1' correspond ‡ la touche 8
+                numeroTouche <= "1000"; --clavier(9) = '1' correspond √† la touche 8
                 toucheDetectee <= '1';
             elsif clavier(10) = '1' then
-                numeroTouche <= "1001"; --clavier(10) = '1' correspond ‡ la touche 9
+                numeroTouche <= "1001"; --clavier(10) = '1' correspond √† la touche 9
                 toucheDetectee <= '1';
             elsif clavier(11) = '1' then
-                numeroTouche <= "1100"; --clavier(11) = '1' correspond ‡ la touche 12
+                numeroTouche <= "1100"; --clavier(11) = '1' correspond √† la touche 12
                 toucheDetectee <= '1';
             elsif clavier(12) = '1' then
-                numeroTouche <= "1111"; --clavier(12) = '1' correspond ‡ la touche 15
+                numeroTouche <= "1111"; --clavier(12) = '1' correspond √† la touche 15
                 toucheDetectee <= '1';
             elsif clavier(13) = '1' then
-                numeroTouche <= "0000"; --clavier(13) = '1' correspond ‡ la touche 0
+                numeroTouche <= "0000"; --clavier(13) = '1' correspond √† la touche 0
                 toucheDetectee <= '1';
             elsif clavier(14) = '1' then
-                numeroTouche <= "1110"; --clavier(14) = '1' correspond ‡ la touche 14
+                numeroTouche <= "1110"; --clavier(14) = '1' correspond √† la touche 14
                 toucheDetectee <= '1';
             elsif clavier(15) = '1' then
-                numeroTouche <= "1101"; --clavier(15) = '1' correspond ‡ la touche 13
+                numeroTouche <= "1101"; --clavier(15) = '1' correspond √† la touche 13
                 toucheDetectee <= '1';
             else
                 numeroTouche <= "0000";
