@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, Salom� Wattiaux, Marco Guzzon
+-- Engineer: Alban Benmouffek, Salomé Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 25.02.2019 16:45:43
 -- Design Name: 
@@ -8,8 +8,8 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: generateur de son : prend en entr�e la tonalit� (grave ou aigu) et un signal d'activation,
---          donne en sortie un signal carr� pouvant aller directement dans l'haut-parleur.
+-- Description: generateur de son : prend en entrée la tonalité (grave ou aigu) et un signal d'activation,
+--          donne en sortie un signal carré pouvant aller directement dans l'haut-parleur.
 -- (aigu = 500Hz ; grave = 250Hz)
 --
 -- Dependencies: 
@@ -28,12 +28,12 @@ entity GenerateurDeBip is
         tonalite : in STD_LOGIC; -- tonalite = '1' <=> bip aigu! (aigu = 500Hz ; grave = 250Hz)
         
         --SORTIES:
-        sound : out STD_LOGIC
+        sound : out STD_LOGIC --Sortie : peut être directement connecté à un haut parleur
     );
 end GenerateurDeBip;
 
 architecture Behavioral of GenerateurDeBip is
-    signal son: STD_LOGIC := '0';
+    signal son: STD_LOGIC := '0'; --Oscille en permanence, sera recopié sur la sortie (sound) ssi active vaut '1'
     signal tick_aigu: STD_LOGIC;
     signal tick_grave: STD_LOGIC;
 begin
@@ -61,14 +61,14 @@ begin
     
     process(CLK) begin
         if rising_edge(CLK) then
-            if tonalite = '1' then
-                if tick_aigu = '1' then
+            if tonalite = '1' then --On veut un son aigu
+                if tick_aigu = '1' then --Génération du signal créneaux
                     son <= NOT(son);
                 else
                     son <= son;
                 end if;
-            else
-                if tick_grave = '1' then
+            else --On veut un son grave
+                if tick_grave = '1' then --Génération du signal créneaux
                     son <= NOT(son);
                 else
                     son <= son;
@@ -77,5 +77,6 @@ begin
         end if;
     end process;
     
+    --Recopiage du signal son sur la sortie sound
     sound <= '0' when active = '0' else son;
 end Behavioral;
