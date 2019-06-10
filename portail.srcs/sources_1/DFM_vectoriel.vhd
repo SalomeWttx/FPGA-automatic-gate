@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, Salom� Wattiaux, Marco Guzzon 
+-- Engineer: Alban Benmouffek, Salomé Wattiaux, Marco Guzzon 
 -- 
 -- Create Date: 25.02.2019 15:20:44
 -- Design Name: 
@@ -8,14 +8,8 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: detecteur de front montant vectoriel (prend en entree un vecteur, donne en sortie un vecteur)
--- 
--- Dependencies: 
--- 
--- Revision:
--- Revision 0.01 - File Created
--- Additional Comments:
--- 
+-- Description: générateur (ou extracteur) de front montant vectoriel (prend en entree un vecteur, donne en sortie les fronts montants de chaque composante de l'entrée; sous forme d'un vecteur)
+--  
 ----------------------------------------------------------------------------------
 
 
@@ -25,12 +19,12 @@ use IEEE.NUMERIC_STD.ALL;
 
 entity DFM_vectoriel is
     Generic (
-        dim: integer := 4
+        dim: integer := 4 --Dimention du vecteur d'entrée (et de sortie)
     );
     Port (
-        CLK : in STD_LOGIC;
-        entree : in STD_LOGIC_VECTOR(dim-1 downto 0);
-        front : out STD_LOGIC_VECTOR(dim-1 downto 0)
+        CLK : in STD_LOGIC; --Horloge
+        entree : in STD_LOGIC_VECTOR(dim-1 downto 0); --Vecteur d'entrée
+        front : out STD_LOGIC_VECTOR(dim-1 downto 0) --Fronts montants de chaque composante
         );
 end DFM_vectoriel;
 
