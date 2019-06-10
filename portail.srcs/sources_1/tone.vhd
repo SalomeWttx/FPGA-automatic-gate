@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, SalomÈ Wattiaux, Marco Guzzon
+-- Engineer: Alban Benmouffek, Salom√© Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 01.03.2019 14:44:11
 -- Design Name: 
@@ -8,8 +8,8 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: permet de gÈnÈrer des bip, on peut prÈciser le nombre de rÈpÈtitions, la durÈe des bip, et la tonalitÈ (grave ou aigu)
--- La sortie doit Ítre reliÈe ‡ un gÈnÈrateur de son.
+-- Description: permet de g√©n√©rer des bip, on peut pr√©ciser le nombre de r√©p√©titions, la dur√©e des bip, et la tonalit√© (grave ou aigu)
+-- La sortie doit √™tre reli√©e √† un g√©n√©rateur de son. (g√©n√©rateur de signal oscillant)
 --
 -- Dependencies:
 --  TICK_Nms (TICK_Nms.vhd)
@@ -24,14 +24,14 @@ entity tone is
         --ENTREES:
         CLK : in STD_LOGIC; --Horloge
         
-        incomingData : in STD_LOGIC; --Vaut '1' pendant une pÈriode d'horloge quand des nouvelles donnÈes sont envoyÈes
-        duree : in STD_LOGIC_VECTOR(6 downto 0); --DurÈe de chaque bip, ainsi que entre les bip, en dixieme de seconde MAX 12,7s !
-        repetition : in STD_LOGIC_VECTOR(2 downto 0); --Nombre de rÈpÈtitions. MAX 7 REPETITIONS!
+        incomingData : in STD_LOGIC; --Vaut '1' pendant une p√©riode d'horloge quand des nouvelles donn√©es sont envoy√©es
+        duree : in STD_LOGIC_VECTOR(6 downto 0); --Dur√©e de chaque bip, ainsi que entre les bip, en dixieme de seconde MAX 12,7s !
+        repetition : in STD_LOGIC_VECTOR(2 downto 0); --Nombre de r√©p√©titions. MAX 7 REPETITIONS!
         ton_IN : in STD_LOGIC;-- ton_IN = '1' <=> bip aigu!
         
         --SORTIES:
         ton_OUT : out STD_LOGIC;-- ton_OUT = '1' <=> bip aigu!
-        active : out STD_LOGIC
+        active : out STD_LOGIC --active = '1' <=> On veut du son !
     );
 end tone;
 
@@ -39,9 +39,9 @@ architecture Behavioral of tone is
     signal repetitions_restantes : integer range 0 to 7 := 0;
     signal duree_bip : integer range 0 to 127 := 0;
     signal ton_bip : STD_LOGIC := '0';
-    signal tick : STD_LOGIC := '0' ;
-    signal compteur : integer range 0 to 127 :=1 ;
-    signal active_son : STD_LOGIC;
+    signal tick : STD_LOGIC := '0' ; --1 Tick tous les 10ms
+    signal compteur : integer range 0 to 127 :=1 ; --Sert √† mesurer la dur√©e de chaque bip en train d'√™tre jou√© (et aussi la dur√©e entre 2 bip cons√©cutifs)
+    signal active_son : STD_LOGIC; --Signal qui sera recopi√© sur la sortie active
 begin
     tick10ms: 
         entity work.TICK_Nms
@@ -56,33 +56,40 @@ begin
     
     process(CLK) begin
         if rising_edge(CLK) then
+            
+            
+            --ACQUISITION DES DONNEES
             if incomingData = '1' then
-                --acquisition des donnÈes
                 repetitions_restantes <= TO_INTEGER(UNSIGNED(repetition));
                 duree_bip <= TO_INTEGER(UNSIGNED(duree));
                 ton_bip <= ton_IN;
                 active_son <= '1';
                 compteur <= 1;
+
+
+            --RIEN A FAIRE
             elsif repetitions_restantes = 0 then
-                --rien ‡ faire
                 active_son <= '0';
                 duree_bip <= duree_bip;
                 ton_bip <= ton_bip;
                 compteur <= 1;
                 repetitions_restantes <= repetitions_restantes;
+
+
+            --IL FAUT FAIRE DU SON!
             else
                 duree_bip <= duree_bip;
                 ton_bip <= ton_bip;
-                if tick = '1' then
-                    if compteur = duree_bip and active_son = '1' then
+                if tick = '1' then --Gestion des r√©p√©titions
+                    if compteur = duree_bip and active_son = '1' then --On doit arr√™ter le son
                         compteur <= 1;
                         active_son <= '0';
                         repetitions_restantes <= repetitions_restantes -1;
-                    elsif compteur = duree_bip and active_son = '0' then
+                    elsif compteur = duree_bip and active_son = '0' then --On doit envoyer du son
                         compteur <= 1;
                         active_son <= '1';
                         repetitions_restantes <= repetitions_restantes;
-                    else
+                    else --On continue exactement ce qu'on fait
                         compteur <= compteur + 1;
                         active_son <= active_son;
                         repetitions_restantes <= repetitions_restantes;
@@ -92,6 +99,7 @@ begin
                     active_son <= active_son;
                     repetitions_restantes <= repetitions_restantes;               
                 end if;
+                    
             end if;
         end if;
     end process;
