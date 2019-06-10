@@ -1,6 +1,6 @@
 ----------------------------------------------------------------------------------
 -- Company: ENSEA
--- Engineer: Alban Benmouffek, SalomÈ Wattiaux, Marco Guzzon
+-- Engineer: Alban Benmouffek, Salom√© Wattiaux, Marco Guzzon
 -- 
 -- Create Date: 25.02.2019 10:15:12
 -- Design Name: 
@@ -8,9 +8,8 @@
 -- Project Name: Portail
 -- Target Devices: 
 -- Tool Versions: 
--- Description: detecteur de front montant : prend un signal quelconque en entrÈe, en donne en sortie '1' pendant une pÈriode d'horloge au moment du front montant de l'entrÈe
+-- Description: g√©n√©rateur (ou extracteur) de front montant : prend un signal quelconque en entr√©e, en donne en sortie '1' pendant une p√©riode d'horloge au moment du front montant de l'entr√©e
 -- 
--- Dependencies: 
 ----------------------------------------------------------------------------------
 
 library IEEE;
@@ -21,10 +20,10 @@ entity DFM is
     Port ( 
         --ENTREES:
         CLK : in STD_LOGIC; --Horloge
-        entree : in STD_LOGIC; --Signal d'entrÈe
+        entree : in STD_LOGIC; --Signal d'entr√©e
         
         --SORTIES:
-        front : out STD_LOGIC --Front montant
+        front : out STD_LOGIC --Fronts montants
     );
 end DFM;
 
@@ -33,6 +32,7 @@ architecture Behavioral of DFM is
     signal Q,D : STD_LOGIC_VECTOR(1 downto 0) := "00";
 begin
     
+    --Actualisation des variables entree_current et entree_previous
     process(CLK) begin
         if rising_edge(CLK) then
             entree_current <= entree;
