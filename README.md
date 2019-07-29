@@ -28,5 +28,5 @@ We made simulation files for most entities of the project. Test benches are file
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
 
