@@ -4,8 +4,8 @@ This projects contains VHDL code to control a gate using an FPGA.
 
 ## Getting Started
 
-To use this project in the real life, you have to implement it on an FPGA. To do this, you'll have to generate a bitstream. For Xilinx's FPGAs, it's safe to use Vivado.
-The constraints file provided in this project is made for the Basys3 board and its XC7A35T-1CPG236C Artix-7 FPGA.
+To use this project in the real life, you have to implement it on an FPGA. To do this, you'll have to generate a bitstream. For Xilinx's FPGAs, it's safe to use [Vivado](https://www.xilinx.com/products/design-tools/vivado.html).
+The constraints file provided in this project is made for the Basys3 board and its XC7A35T-1CPG236C Artix-7 FPGA (on a *Basys3* board).
 
 This project includes the management of a 16-digit digicode, obstacle detection, and all the code needed to control the gate in a intuitive way.
 
@@ -14,6 +14,7 @@ A description of each part of the project is given at the beginning of every fil
 ### Prerequisites
 
 To make a working portal, you'll need a FPGA, and all physical components connected to the FPGA (motor, H-bridge, 16-digit keyboard...)
+
 Attention : the FPGA's clock must be 100Mhz !
 
 ## Running the tests
@@ -22,7 +23,7 @@ We made simulation files for most entities of the project. Test benches are file
 
 ## Authors
 
-* **Alban Benmouffek** - *VHDL code, schematics* - [sonibla](https://github.com/sonibla)
+* [**Alban Benmouffek**](https://github.com/sonibla) - *VHDL code, schematics*
 * **Marco Guzzon** - *PCB, schematics, design of analog circuits*
 * **Salomé Wattiaux** - *Documentation, obstacle detection*
 
