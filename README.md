@@ -5,7 +5,7 @@ This projects contains VHDL code to control a gate using an FPGA.
 ## Getting Started
 
 To use this project in the real life, you have to implement it on an FPGA. To do this, you'll have to generate a bitstream. For Xilinx's FPGAs, it's safe to use [Vivado](https://www.xilinx.com/products/design-tools/vivado.html).
-The constraints file provided in this project is made for the Basys3 board and its XC7A35T-1CPG236C Artix-7 FPGA (on a *Basys3* board).
+The constraints file provided in this project is made for the *Basys3* board and its XC7A35T-1CPG236C Artix-7 FPGA.
 
 This project includes the management of a 16-digit digicode, obstacle detection, and all the code needed to control the gate in a intuitive way.
 
