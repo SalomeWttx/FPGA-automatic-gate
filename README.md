@@ -9,7 +9,7 @@ The constraints file provided in this project is made for the *Basys3* board and
 
 This project includes the management of a 16-digit digicode, obstacle detection, and all the code needed to control the gate in a intuitive way.
 
-A description of each part of the project is given at the beginning of every file. It's written in French. There's no English translation available so far
+A description of each part of the project is given at the beginning of every file. It's written in French. There's no English translation available so far.
 The main file is [Portail.vhd](portail.srcs/sources_1/Portail.vhd).
 
 ### Prerequisites
